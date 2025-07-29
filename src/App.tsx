@@ -6,7 +6,7 @@ import './styles/global.css';
 export function App() {
   return (
     <div>
-      <Heading />
+      <Heading atr01='teste'>Ola mundo!</Heading>
       <p>asdasdasdasd asdasdasd</p>
     </div>
   );
