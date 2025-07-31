@@ -5,6 +5,8 @@ import { Menu } from './components/Menu';
 
 import './styles/theme.css';
 import './styles/global.css';
+import { CountDown } from './components/CountDown';
+import { DefaultInput } from './components/DefaultInput';
 
 export function App() {
   return (
@@ -16,7 +18,29 @@ export function App() {
         <Menu />
       </Container>
       <Container>
-        <Heading>Menu</Heading>
+        <CountDown></CountDown>
+      </Container>
+      <Container>
+        <form className='form' action=''>
+          <div className='formRow'>
+            <DefaultInput
+              id='meuInput'
+              labelText='Qualquer Coisa'
+              type='text'
+              placeholder='Digite algo'
+            />
+          </div>
+          <div className='formRow'>
+            <p>Lorem ipsum dolor sit amet.</p>
+          </div>
+          <div className='formRow'>
+            <p>Ciclos</p>
+            <p>0 0 0 0 0 0</p>
+          </div>
+          <div className='formRow'>
+            <button>Enviar</button>
+          </div>
+        </form>
       </Container>
     </>
   );
