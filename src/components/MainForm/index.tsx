@@ -41,6 +41,8 @@ export function MainForm() {
 
     const secondsRemaining = newTask.duration * 60;
 
+    console.log(newTask);
+
     setState(prevState => {
       return {
         ...prevState,
@@ -68,9 +70,13 @@ export function MainForm() {
       <div className='formRow'>
         <p>Lorem ipsum dolor sit amet.</p>
       </div>
-      <div className='formRow'>
-        <Cycles />
-      </div>
+
+      {state.currenctCycle > 0 && (
+        <div className='formRow'>
+          <Cycles />
+        </div>
+      )}
+
       <div className='formRow'>
         <DefaultButton color='green' icon={<PlayCircleIcon />} />
       </div>
