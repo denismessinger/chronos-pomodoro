@@ -65,6 +65,7 @@ export function MainForm() {
           type='text'
           placeholder='Digite algo'
           ref={taskNameInput}
+          disabled={!!state.activeTask}
         />
       </div>
       <div className='formRow'>
@@ -78,7 +79,22 @@ export function MainForm() {
       )}
 
       <div className='formRow'>
-        <DefaultButton color='green' icon={<PlayCircleIcon />} />
+        {!state.activeTask ? (
+          <DefaultButton
+            title='Iniciar nova tarefa'
+            aria-label='Iniciar nova tarefa'
+            type='submit'
+            icon={<PlayCircleIcon />}
+          />
+        ) : (
+          <DefaultButton
+            title='Interromper tarefa'
+            aria-label='Interromper tarefa'
+            type='button'
+            color='red'
+            icon={<PlayCircleIcon />}
+          />
+        )}
       </div>
     </form>
   );
