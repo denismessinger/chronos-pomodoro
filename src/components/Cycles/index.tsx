@@ -6,7 +6,7 @@ import styles from './styles.module.css';
 export function Cycles() {
   const { state } = useTaskContext();
 
-  const cycleStep = Array.from({ length: state.currenctCycle });
+  const cycleStep = Array.from({ length: state.currentCycle });
 
   const cycleDescriptionMap = {
     workTime: 'foco',
