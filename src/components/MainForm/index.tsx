@@ -8,10 +8,15 @@ import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { getNextCycle } from '../../utils/getNextCycle';
 import { getNextCycleType } from '../../utils/getNextCycleType';
 import { TaskActionsTypes } from '../../contexts/TaskContext/TaskActions';
+import { Tips } from '../Tips';
 
 export function MainForm() {
   const { state, dispatch } = useTaskContext();
   const taskNameInput = useRef<HTMLInputElement>(null);
+
+  // Ciclos
+  const newCycle = getNextCycle(state.currentCycle);
+  const nextCycleType = getNextCycleType(newCycle);
 
   function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,9 +29,6 @@ export function MainForm() {
       alert('Digite a tarefa');
       return;
     }
-
-    const newCycle = getNextCycle(state.currentCycle);
-    const nextCycleType = getNextCycleType(newCycle);
 
     const newTask: TaskModel = {
       id: Date.now().toString(),
@@ -58,7 +60,7 @@ export function MainForm() {
         />
       </div>
       <div className='formRow'>
-        <p>Lorem ipsum dolor sit amet.</p>
+        <Tips />
       </div>
 
       {state.currentCycle > 0 && (
