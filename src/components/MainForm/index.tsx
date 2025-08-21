@@ -33,7 +33,7 @@ export function MainForm() {
     const newTask: TaskModel = {
       id: Date.now().toString(),
       name: taskName,
-      starDate: Date.now(),
+      startDate: Date.now(),
       completeDate: null,
       interruptDate: null,
       duration: state.config[nextCycleType],
