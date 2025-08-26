@@ -9,6 +9,7 @@ import { getNextCycle } from '../../utils/getNextCycle';
 import { getNextCycleType } from '../../utils/getNextCycleType';
 import { TaskActionsTypes } from '../../contexts/TaskContext/TaskActions';
 import { Tips } from '../Tips';
+import { toastAdapter } from '../../adapters/toastAdapter';
 
 export function MainForm() {
   const { state, dispatch } = useTaskContext();
@@ -21,12 +22,14 @@ export function MainForm() {
   function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    toastAdapter.dismiss();
+
     if (taskNameInput.current === null) return;
 
     const taskName = taskNameInput.current.value.trim();
 
     if (!taskName) {
-      alert('Digite a tarefa');
+      toastAdapter.warning('Digite a tarefa');
       return;
     }
 
@@ -41,10 +44,14 @@ export function MainForm() {
     };
 
     dispatch({ type: TaskActionsTypes.START_TASK, payload: newTask });
+
+    toastAdapter.success('Tarefa iniciada');
   }
 
   function handleInterruptTask() {
+    toastAdapter.dismiss();
     dispatch({ type: TaskActionsTypes.INTERRUPT_TASK });
+    toastAdapter.error('Tarefa interrompida');
   }
 
   return (
