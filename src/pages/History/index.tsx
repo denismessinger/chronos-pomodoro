@@ -9,10 +9,14 @@ import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { formatDate } from '../../utils/formatDate';
 import { getTaskStatus } from '../../utils/getTaskStatus';
 import { sortTasks, type SortTasksOptions } from '../../utils/sortTasks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { TaskActionsTypes } from '../../contexts/TaskContext/TaskActions';
 
 export function History() {
   const { state } = useTaskContext();
+  const { dispatch } = useTaskContext();
+  const hasTasks = state.tasks.length > 0;
+
   const [sortTaskOptions, setSortTaskOptions] = useState<SortTasksOptions>(
     () => {
       return {
@@ -36,69 +40,97 @@ export function History() {
     });
   }
 
+  useEffect(() => {
+    setSortTaskOptions(prevState => ({
+      ...prevState,
+      tasks: sortTasks({
+        tasks: state.tasks,
+        direction: prevState.direction,
+        field: prevState.field,
+      }),
+    }));
+  }, [state.tasks]);
+
+  function handleResetHistory() {
+    if (!confirm('Tem certeza ?')) return;
+
+    dispatch({ type: TaskActionsTypes.RESET_STATE });
+  }
+
   return (
     <MainTemplate>
       <Container>
         <Heading>
           <span>History</span>
-          <span className={styles.buttonContainer}>
-            <DefaultButton
-              icon={<TrashIcon />}
-              color='red'
-              aria-label='Apagar o histórico'
-              title='Apagar o histórico'
-            ></DefaultButton>
-          </span>
+          {hasTasks && (
+            <span className={styles.buttonContainer}>
+              <DefaultButton
+                icon={<TrashIcon />}
+                color='red'
+                aria-label='Apagar o histórico'
+                title='Apagar o histórico'
+                onClick={handleResetHistory}
+              ></DefaultButton>
+            </span>
+          )}
         </Heading>
       </Container>
       <Container>
-        <div className={styles.responsiveTable}>
-          <table>
-            <thead>
-              <tr>
-                <th
-                  onClick={() => handleSortTasks({ field: 'name' })}
-                  className={styles.thSort}
-                >
-                  Tarefa
-                </th>
-                <th
-                  onClick={() => handleSortTasks({ field: 'duration' })}
-                  className={styles.thSort}
-                >
-                  Duração
-                </th>
-                <th
-                  onClick={() => handleSortTasks({ field: 'startDate' })}
-                  className={styles.thSort}
-                >
-                  Data
-                </th>
-                <th>Status</th>
-                <th>Tipo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortTaskOptions.tasks.map(task => {
-                const taskTypeDictionary = {
-                  workTime: 'Foco',
-                  shortBreakTime: 'Descanso curto',
-                  longBreakTime: 'Descanso longo',
-                };
+        {hasTasks && (
+          <div className={styles.responsiveTable}>
+            <table>
+              <thead>
+                <tr>
+                  <th
+                    onClick={() => handleSortTasks({ field: 'name' })}
+                    className={styles.thSort}
+                  >
+                    Tarefa
+                  </th>
+                  <th
+                    onClick={() => handleSortTasks({ field: 'duration' })}
+                    className={styles.thSort}
+                  >
+                    Duração
+                  </th>
+                  <th
+                    onClick={() => handleSortTasks({ field: 'startDate' })}
+                    className={styles.thSort}
+                  >
+                    Data
+                  </th>
+                  <th>Status</th>
+                  <th>Tipo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortTaskOptions.tasks.map(task => {
+                  const taskTypeDictionary = {
+                    workTime: 'Foco',
+                    shortBreakTime: 'Descanso curto',
+                    longBreakTime: 'Descanso longo',
+                  };
 
-                return (
-                  <tr key={task.id}>
-                    <td>{task.name}</td>
-                    <td>{task.duration}min</td>
-                    <td>{formatDate(task.startDate)}</td>
-                    <td>{getTaskStatus(task, state.activeTask)}</td>
-                    <td>{taskTypeDictionary[task.type]}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                  return (
+                    <tr key={task.id}>
+                      <td>{task.name}</td>
+                      <td>{task.duration}min</td>
+                      <td>{formatDate(task.startDate)}</td>
+                      <td>{getTaskStatus(task, state.activeTask)}</td>
+                      <td>{taskTypeDictionary[task.type]}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {!hasTasks && (
+          <p style={{ textAlign: 'center', fontWeight: 'bold' }}>
+            Ainda não existem tasks criadas
+          </p>
+        )}
       </Container>
     </MainTemplate>
   );
