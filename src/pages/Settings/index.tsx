@@ -7,9 +7,10 @@ import { MainTemplate } from '../../templates/MainTemplate';
 import { useRef } from 'react';
 import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { toastAdapter } from '../../adapters/toastAdapter';
+import { TaskActionsTypes } from '../../contexts/TaskContext/TaskActions';
 
 export function Settings() {
-  const { state } = useTaskContext();
+  const { state, dispatch } = useTaskContext();
   const workTimeInput = useRef<HTMLInputElement>(null);
   const shortBreakTimeInput = useRef<HTMLInputElement>(null);
   const longBreakTimeInput = useRef<HTMLInputElement>(null);
@@ -51,7 +52,16 @@ export function Settings() {
       });
       return;
     }
-    console.log('salvar');
+    dispatch({
+      type: TaskActionsTypes.CHANGE_SETTINGS,
+      payload: {
+        workTime,
+        shortBreakTime,
+        longBreakTime,
+      },
+    });
+
+    toastAdapter.success('Configurações Salvas!');
   }
 
   return (
