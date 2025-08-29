@@ -4,7 +4,7 @@ import { DefaultButton } from '../../components/DefaultButton';
 import { DefaultInput } from '../../components/DefaultInput';
 import { Heading } from '../../components/Heading';
 import { MainTemplate } from '../../templates/MainTemplate';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { toastAdapter } from '../../adapters/toastAdapter';
 import { TaskActionsTypes } from '../../contexts/TaskContext/TaskActions';
@@ -14,6 +14,10 @@ export function Settings() {
   const workTimeInput = useRef<HTMLInputElement>(null);
   const shortBreakTimeInput = useRef<HTMLInputElement>(null);
   const longBreakTimeInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    document.title = 'Configurações de Tempos';
+  }, []);
 
   function handleSaveSettings(e: React.MouseEvent<HTMLFormElement>) {
     e.preventDefault();

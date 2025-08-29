@@ -67,6 +67,7 @@ export function History() {
 
   useEffect(() => {
     return () => {
+      document.title = 'Histórico de Tasks';
       toastAdapter.dismiss();
     };
   }, []);
