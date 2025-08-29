@@ -1,13 +1,59 @@
 import { SaveIcon } from 'lucide-react';
 import { Container } from '../../components/Container';
-import { CountDown } from '../../components/CountDown';
 import { DefaultButton } from '../../components/DefaultButton';
 import { DefaultInput } from '../../components/DefaultInput';
 import { Heading } from '../../components/Heading';
-import { MainForm } from '../../components/MainForm';
 import { MainTemplate } from '../../templates/MainTemplate';
+import { useRef } from 'react';
+import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
+import { toastAdapter } from '../../adapters/toastAdapter';
 
 export function Settings() {
+  const { state } = useTaskContext();
+  const workTimeInput = useRef<HTMLInputElement>(null);
+  const shortBreakTimeInput = useRef<HTMLInputElement>(null);
+  const longBreakTimeInput = useRef<HTMLInputElement>(null);
+
+  function handleSaveSettings(e: React.MouseEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    toastAdapter.dismiss();
+
+    const workTime = Number(workTimeInput.current?.value);
+    const shortBreakTime = Number(shortBreakTimeInput.current?.value);
+    const longBreakTime = Number(longBreakTimeInput.current?.value);
+
+    const formErrors: string[] = [];
+
+    if (isNaN(workTime) || isNaN(shortBreakTime) || isNaN(longBreakTime)) {
+      formErrors.push('Informe apenas números!');
+    }
+
+    if (workTime < 1 || workTime > 99) {
+      formErrors.push('Informe apenas números entre 1 e 99 para foco!');
+    }
+
+    if (shortBreakTime < 1 || shortBreakTime > 30) {
+      formErrors.push(
+        'Informe apenas números entre 1 e 30 para descanso curto!',
+      );
+    }
+
+    if (shortBreakTime < 1 || shortBreakTime > 60) {
+      formErrors.push(
+        'Informe apenas números entre 1 e 60 para descanso longo!',
+      );
+    }
+
+    if (formErrors.length > 0) {
+      formErrors.forEach(error => {
+        toastAdapter.error(error);
+      });
+      return;
+    }
+    console.log('salvar');
+  }
+
   return (
     <MainTemplate>
       <Container>
@@ -20,15 +66,33 @@ export function Settings() {
         </p>
       </Container>
       <Container>
-        <form action='' className='form'>
+        <form onClick={handleSaveSettings} action='' className='form'>
           <div className='formRow'>
-            <DefaultInput id='workTime' labelText='Foco' />
+            <DefaultInput
+              id='workTime'
+              labelText='Foco'
+              ref={workTimeInput}
+              defaultValue={state.config.workTime}
+              type='number'
+            />
           </div>
           <div className='formRow'>
-            <DefaultInput id='shortBreakTime' labelText='Descanso Curto' />
+            <DefaultInput
+              id='shortBreakTime'
+              labelText='Descanso Curto'
+              ref={shortBreakTimeInput}
+              defaultValue={state.config.shortBreakTime}
+              type='number'
+            />
           </div>
           <div className='formRow'>
-            <DefaultInput id='longBreakTime' labelText='Descanso Longo' />
+            <DefaultInput
+              id='longBreakTime'
+              labelText='Descanso Longo'
+              ref={longBreakTimeInput}
+              defaultValue={state.config.longBreakTime}
+              type='number'
+            />
           </div>
           <div className='formRow'>
             <DefaultButton
