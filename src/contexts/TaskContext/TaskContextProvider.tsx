@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { initialTaskState } from './initialTastState';
 import { TaskContext } from './TaskContext';
 import { taskReducer } from './TaskReducer';
@@ -23,7 +23,7 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
       formattedSecondsRemaining: '00:00',
     };
   });
-  let playBeepRef = useRef<() => void | null>(null);
+  const playBeepRef = useRef<() => void | null>(null);
 
   const worker = TimerWorkerManager.getInstance();
 

@@ -14,7 +14,7 @@ export class TimerWorkerManager {
     return instance;
   }
 
-  postMessage(message: any) {
+  postMessage(message: string) {
     this.worker.postMessage(message);
   }
 
@@ -24,6 +24,7 @@ export class TimerWorkerManager {
 
   terminate() {
     this.worker.terminate();
+
     instance = null;
   }
 }
